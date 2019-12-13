@@ -47,17 +47,19 @@ def main(config):
     # Extract features
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
-        output = model(data)
+        
+        # # TODO:: loss calculation for progress
+        # output = model(data)
+        # import torch.nn.functional as F
+        # loss = F.nll_loss(output, target)
+        # print('Train Epoch: \tLoss: {:.6f}'.format(loss.item()))
 
         # TODO:: Extract Features from given layer
+        extracted_features = model.extract(data)
 
         # TODO:: Save into a file
 
-        # TODO:: loss calculation for progress
-        import torch.nn.functional as F
-        loss = F.nll_loss(output, target)
-        print('Train Epoch: \tLoss: {:.6f}'.format(loss.item()))
-
+        
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neural Feature Extractor')
 
