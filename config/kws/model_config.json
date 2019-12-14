@@ -1,0 +1,13 @@
+{
+    "model": "KwsResModel",
+    "config": {
+        "n_labels": 12,
+        "res_pool": [
+            4,
+            3
+        ],
+        "n_feature_maps": 19,
+        "n_layers": 6
+    },
+    "trained_model": "pretrained_model/place_holder.pt"
+}

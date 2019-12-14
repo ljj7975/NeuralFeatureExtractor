@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 from pprint import pprint
 
-from utils import prepare_device
+from utils import prepare_device, load_json
 from utils import color_print as cp
 
 import model as model_modules
@@ -15,27 +15,21 @@ import file_handler as file_handler_modules
 def main(config):
 
     # Preapre model
-    model_class = getattr(model_modules, config.model)
+    model_config = load_json(config.model_config)
+    model_class = getattr(model_modules, model_config["model"])
+    model = model_class(**model_config["config"])
 
-    # TODO:: read in model config and initialize
-    model_config = {}
-    model = model_class(**model_config)
-
-    cp.print_green(f"pretrained model: {config.trained_model}")
-    model.load_state_dict(torch.load(config.trained_model), strict=False)
+    trained_model = model_config["trained_model"]
+    cp.print_green(f"pretrained model: {trained_model}")
+    model.load_state_dict(torch.load(trained_model), strict=False)
 
     cp.print_green("model:\n", model)
 
 
     # Preapre data loader
-    data_loader_class = getattr(data_loader_modules, config.data_loader)
-
-    # TODO:: read in model config and initialize
-    data_loader_config = {
-        'data_dir': config.data_folder, 
-        'batch_size': 512
-    }
-    data_loader = data_loader_class(**data_loader_config)
+    data_config = load_json(config.data_config)
+    data_loader_class = getattr(data_loader_modules, data_config["data_loader"])
+    data_loader = data_loader_class(**data_config["config"])
 
     cp.print_green(f"data loader: {type(data_loader).__name__}")
 
@@ -97,17 +91,11 @@ def main(config):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neural Feature Extractor')
 
-    parser.add_argument('--model', default=None, required=True, type=str,
-                      help='name of the model class')
+    parser.add_argument('--model_config', default=None, required=True, type=str,
+                      help='path to model config')
 
-    parser.add_argument('--trained_model', default=None, required=True, type=str,
-                      help='path to the trained model')
-
-    parser.add_argument('--data_loader', default=None, required=True, type=str,
-                      help='name of data loader class')
-
-    parser.add_argument('--data_folder', default=None, required=True, type=str,
-                      help='path to the dataset')
+    parser.add_argument('--data_config', default=None, required=True, type=str,
+                      help='path to data config')
 
     parser.add_argument('--output_folder', default='generated', type=str,
                       help='path to store generated dataset')

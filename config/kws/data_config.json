@@ -1,0 +1,7 @@
+{
+    "data_loader": "KwsDataLoader",
+    "config": {
+        "data_dir": "abc",
+        "batch_size": 512
+    }
+}

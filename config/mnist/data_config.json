@@ -1,0 +1,7 @@
+{
+    "data_loader": "MnistDataLoader",
+    "config": {
+        "data_dir": "abc",
+        "batch_size": 512
+    }
+}

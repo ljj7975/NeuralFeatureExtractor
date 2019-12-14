@@ -5,7 +5,9 @@ from .color_print import print_bold, \
                          print_yellow, \
                          print_red
 from .timer import Timer
-from .file_manager import ensure_dir, \
-                          read_json, \
-                          write_json
-from .torch_util import prepare_device
+from .file_utils import ensure_dir, \
+                        load_json, \
+                        save_json, \
+                        load_pkl, \
+                        save_pkl
+from .torch_utils import prepare_device
