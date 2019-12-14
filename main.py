@@ -1,5 +1,6 @@
 import argparse
 import torch
+from tqdm import tqdm
 
 from pprint import pprint
 
@@ -8,6 +9,7 @@ from utils import color_print as cp
 
 import model as model_modules
 import data_loader as data_loader_modules
+import file_handler as file_handler_modules
 
 
 def main(config):
@@ -35,6 +37,15 @@ def main(config):
 
     print("data loader\n", data_loader)
 
+    # Preapre file handler
+    
+    file_handler = file_handler_modules.handler_mapping[config.file_type]('generated')
+
+    feature_size = None
+
+    print(f"file type: {config.file_type}")
+    print(f"file handler\n", file_handler)
+
     # Prepare extraction
     device, gpu_device_ids = prepare_device(config.num_gpu)
 
@@ -45,19 +56,32 @@ def main(config):
     model.to(device)
 
     # Extract features
-    for batch_idx, (data, target) in enumerate(data_loader):
+    total = 0
+    for batch_idx, (data, target) in enumerate(tqdm(data_loader)):
         data, target = data.to(device), target.to(device)
-        
-        # # TODO:: loss calculation for progress
-        # output = model(data)
-        # import torch.nn.functional as F
-        # loss = F.nll_loss(output, target)
-        # print('Train Epoch: \tLoss: {:.6f}'.format(loss.item()))
 
-        # TODO:: Extract Features from given layer
-        extracted_features = model.extract(data)
+        extracted_features = model(data)
 
-        # TODO:: Save into a file
+        if feature_size is None:
+            feature_size = list(extracted_features.size())[1:]
+
+        extracted_features = extracted_features.data.tolist()
+
+        target = target.unsqueeze(1).data.tolist()
+
+        file_handler.add_sample(extracted_features, target)
+
+        total += len(target)
+
+        file_handler.flush()
+
+
+    meta = {
+        'feature_size': feature_size,
+        'total': total
+    }
+
+    file_handler.generate_meta_file(meta)
 
         
 if __name__ == '__main__':
@@ -74,6 +98,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--data_folder', default=None, type=str,
                       help='path to the dataset')
+
+    parser.add_argument('--file_type', default='csv', type=str,
+                      help='type of output file')
 
     parser.add_argument('--num_gpu', default=0, type=int,
                       help='number of GPU to use (default:0)')
