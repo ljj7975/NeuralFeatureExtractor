@@ -1,15 +1,16 @@
 # NeuralFeatureExtractor
 
-## Usgae
+## Supported
+- [pytorch MNIST](https://github.com/pytorch/examples/tree/master/mnist)
 
-Generating sample MNIST features (feature size : [196])
+## Example
+
+The example extrat features of size [196] from [pytorch MNIST example](https://github.com/pytorch/examples/tree/master/mnist)
+
+Trained model is stored under [pretrained_model](https://github.com/ljj7975/NeuralFeatureExtractor/tree/master/pretrained_model)
 
 ```
-// train a base model
-python training_script/train_mnist.py --data_folder <path to dataset> --save-model
-
-// generate samples
-python main.py --model MnistModel --data_loader MnistDataLoader --trained_model mnist_cnn.pt --data_folder <path to dataset>
+python main.py --model MnistModel --data_loader MnistDataLoader --trained_model pretrained_model/mnist_cnn.pt --data_folder <path to dataset>
 ```
 
-Samples will be stored under `generated/<model name>`
+Generated samples are stored under `generated/<model name>`
