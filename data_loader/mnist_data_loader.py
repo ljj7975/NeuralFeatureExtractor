@@ -9,10 +9,8 @@ class MnistDataLoader(DataLoader):
             transforms.Normalize((0.1307,), (0.3081,))
             ])
 
-        print(data_dir)
-
         self.dataset = MNIST(data_dir, 
-                             train=False, 
+                             train=True, 
                              transform=trsfm, 
                              download=True)
 

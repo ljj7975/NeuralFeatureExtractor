@@ -8,7 +8,7 @@ from pprint import pprint
 class FileHandler(ABC):
     def __init__(self, dir_path):
         super(FileHandler, self).__init__()
-        self.meta_file_generated = False
+        self.meta = None
 
         self.features = []
         self.labels = []
@@ -21,7 +21,13 @@ class FileHandler(ABC):
         self._prepare_file(self.dir_path)
 
     def __del__(self):
-        if not self.meta_file_generated:
+        if self.meta is not None:
+            if 'total' in self.meta:
+                assert self.feature_flushed_count == self.meta['total'], \
+                    "number of flushed feature count is not equal to total count"
+                assert self.label_flushed_count == self.meta['total'], \
+                    "number of flushed label count is not equal to total count"
+        else:
             warnings.warn("meta file is not generated")
 
     @abstractmethod
@@ -39,14 +45,11 @@ class FileHandler(ABC):
             - total: total number of samples
         '''
 
-        print('storing meta file')
-        pprint(meta)
-
         meta_writer = csv.writer(open(self.dir_path + "/meta.csv", "w"))
         for key, val in meta.items():
             meta_writer.writerow([key, val])
 
-        self.meta_file_generated = True
+        self.meta = meta
 
     @abstractmethod
     def flush_sample(self):

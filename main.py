@@ -21,9 +21,11 @@ def main(config):
     model_config = {}
     model = model_class(**model_config)
 
-    # TODO:: load trained model
+    cp.print_green(f"pretrained model: {config.trained_model}")
+    model.load_state_dict(torch.load(config.trained_model), strict=False)
 
-    print("model\n", model)
+    cp.print_green("model:\n", model)
+
 
     # Preapre data loader
     data_loader_class = getattr(data_loader_modules, config.data_loader)
@@ -35,21 +37,27 @@ def main(config):
     }
     data_loader = data_loader_class(**data_loader_config)
 
-    print("data loader\n", data_loader)
+    cp.print_green(f"data loader: {type(data_loader).__name__}")
+
 
     # Preapre file handler
+
+    output_path = config.output_folder + "/" + type(model).__name__
+
+    cp.print_green(f"file type: {config.file_type}")
+    cp.print_green(f"output folder: {output_path}")
     
-    file_handler = file_handler_modules.handler_mapping[config.file_type]('generated')
+    file_handler = file_handler_modules.handler_mapping[config.file_type](output_path)
 
     feature_size = None
 
-    print(f"file type: {config.file_type}")
-    print(f"file handler\n", file_handler)
 
     # Prepare extraction
+
     device, gpu_device_ids = prepare_device(config.num_gpu)
 
     if len(gpu_device_ids) > 1:
+        cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
         model = torch.nn.DataParallel(model, device_ids=gpu_device_ids)
 
     model.eval()
@@ -81,23 +89,28 @@ def main(config):
         'total': total
     }
 
+    cp.print_green('meta_file:\n', meta)
+
     file_handler.generate_meta_file(meta)
 
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neural Feature Extractor')
 
-    parser.add_argument('--model', default=None, type=str,
+    parser.add_argument('--model', default=None, required=True, type=str,
                       help='name of the model class')
 
-    parser.add_argument('--trained_model', default=None, type=str,
+    parser.add_argument('--trained_model', default=None, required=True, type=str,
                       help='path to the trained model')
 
-    parser.add_argument('--data_loader', default=None, type=str,
+    parser.add_argument('--data_loader', default=None, required=True, type=str,
                       help='name of data loader class')
 
-    parser.add_argument('--data_folder', default=None, type=str,
+    parser.add_argument('--data_folder', default=None, required=True, type=str,
                       help='path to the dataset')
+
+    parser.add_argument('--output_folder', default='generated', type=str,
+                      help='path to store generated dataset')
 
     parser.add_argument('--file_type', default='csv', type=str,
                       help='type of output file')
