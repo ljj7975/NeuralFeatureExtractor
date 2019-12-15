@@ -24,7 +24,7 @@ To support new file type, simply write a class that inherits [FileHandler](https
 
 In order to add a new model, copy and paste your model to [model](https://github.com/ljj7975/NeuralFeatureExtractor/tree/master/model) folder and modify the `forward` function to return the intermediate representation
 
-The new model must be added to [__init__.py](https://github.com/ljj7975/NeuralFeatureExtractor/blob/master/model/__init__.py) as well.
+The new model must be added to [\_\_init\_\_.py](https://github.com/ljj7975/NeuralFeatureExtractor/blob/master/model/__init__.py) as well.
 
 Then, the trained model must be stored under [pretrained_model](https://github.com/ljj7975/NeuralFeatureExtractor/tree/master/pretrained_model) folder
 
