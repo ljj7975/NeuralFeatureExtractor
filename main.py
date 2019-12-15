@@ -38,10 +38,10 @@ def extract_feature(model, device, data_loader, file_handler):
 def main(config):
 
     # Preapre model
-    
+
     model_config = load_json(config.model_config)
     model_class = getattr(model_modules, model_config["model"])
-    model = model_class(**model_config["config"])
+    model = model_class(model_config["config"])
 
     trained_model = model_config["trained_model"]
     cp.print_green(f"pretrained model: {trained_model}")
@@ -76,7 +76,7 @@ def main(config):
 
     # Extract train features
 
-    train_data_loader = data_loader_class(**data_config["train_config"])
+    train_data_loader = data_loader_class(data_config["train_config"])
     train_file_handler = file_handler_modules.handler_mapping[config.file_type](output_path + "/train")
 
     feature_size, total = extract_feature(model, device, train_data_loader, train_file_handler)
@@ -95,7 +95,7 @@ def main(config):
 
     # Extract test features
 
-    test_data_loader = data_loader_class(**data_config["test_config"])
+    test_data_loader = data_loader_class(data_config["test_config"])
     test_file_handler = file_handler_modules.handler_mapping[config.file_type](output_path + "/test")
 
     feature_size, total = extract_feature(model, device, test_data_loader, test_file_handler)

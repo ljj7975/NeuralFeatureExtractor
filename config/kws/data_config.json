@@ -1,5 +1,5 @@
 {
-    "data_loader": "KwsDataLoader",
+    "data_loader": "GscDataLoader",
     "train_config": {
         "data_dir": "abc",
         "batch_size": 512

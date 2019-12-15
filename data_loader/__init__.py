@@ -1,1 +1,2 @@
-from .mnist_data_loader import MnistDataLoader
+from .mnist_data_loader import MNISTDataLoader
+from .gsc_data_loader import GSCDataLoader

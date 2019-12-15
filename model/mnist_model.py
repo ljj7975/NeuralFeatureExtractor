@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class MnistModel(nn.Module):
-    def __init__(self):
-        super(MnistModel, self).__init__()
+class MNISTModel(nn.Module):
+    def __init__(self, _):
+        super(MNISTModel, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout2d(0.25)

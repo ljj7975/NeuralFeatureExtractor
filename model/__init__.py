@@ -1,2 +1,2 @@
-from .mnist_model import MnistModel
-from .kws_res_model import KwsResModel
+from .mnist_model import MNISTModel
+from .kws_res_model import KWSResModel
