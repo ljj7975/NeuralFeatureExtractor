@@ -61,6 +61,8 @@ python main.py --model_config config/mnist/model_config.json --data_config confi
 
 ### [Keyword Spotting: Honk](https://github.com/castorini/honk) & [Google Speech Command dataset](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html)
 
+Relevant packages can be installted by running `pip install -r per_model_requirements/kws_res_model.txt`
+
 The dataset must be downloaded prior to feature extraction.
 Please refer to [official Google Speech Command dataset page](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html)
 
