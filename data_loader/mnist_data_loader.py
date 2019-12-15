@@ -3,14 +3,14 @@ from torchvision.datasets import MNIST
 from torch.utils.data import DataLoader
 
 class MnistDataLoader(DataLoader):
-    def __init__(self, data_dir, batch_size=64):
+    def __init__(self, data_dir, train, batch_size=64):
         trsfm = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))
             ])
 
         self.dataset = MNIST(data_dir, 
-                             train=True, 
+                             train=train,
                              transform=trsfm, 
                              download=True)
 

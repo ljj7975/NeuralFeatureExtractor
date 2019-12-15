@@ -1,6 +1,10 @@
 {
     "data_loader": "KwsDataLoader",
-    "config": {
+    "train_config": {
+        "data_dir": "abc",
+        "batch_size": 512
+    },
+    "test_config": {
         "data_dir": "abc",
         "batch_size": 512
     }
