@@ -1,5 +1,5 @@
 {
     "model": "MnistModel",
     "config": {},
-    "trained_model": "pretrained_model/mnist.pt"
+    "trained_model": "pretrained_model/mnist_model.pt"
 }

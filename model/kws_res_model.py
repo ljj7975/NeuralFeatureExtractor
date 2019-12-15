@@ -3,26 +3,19 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class KwsResModel(nn.Module):
-    def __init__(self, config):
+    def __init__(self, n_labels, n_feature_maps, n_layers, res_pool=None):
         super().__init__()
-        n_labels = config["n_labels"]
-        n_maps = config["n_feature_maps"]
-        self.conv0 = nn.Conv2d(1, n_maps, (3, 3), padding=(1, 1), bias=False)
-        if "res_pool" in config:
-            self.pool = nn.AvgPool2d(config["res_pool"])
+        self.conv0 = nn.Conv2d(1, n_feature_maps, (3, 3), padding=(1, 1), bias=False)
+        if res_pool is not None:
+            self.pool = nn.AvgPool2d(res_pool)
 
-        self.n_layers = n_layers = config["n_layers"]
-        dilation = config["use_dilation"]
-        if dilation:
-            self.convs = [nn.Conv2d(n_maps, n_maps, (3, 3), padding=int(2**(i // 3)), dilation=int(2**(i // 3)),
-                bias=False) for i in range(n_layers)]
-        else:
-            self.convs = [nn.Conv2d(n_maps, n_maps, (3, 3), padding=1, dilation=1,
-                bias=False) for _ in range(n_layers)]
+        self.n_layers = n_layers
+        self.convs = [nn.Conv2d(n_feature_maps, n_feature_maps, (3, 3), padding=1, dilation=1,
+            bias=False) for _ in range(self.n_layers)]
         for i, conv in enumerate(self.convs):
-            self.add_module("bn{}".format(i + 1), nn.BatchNorm2d(n_maps, affine=False))
+            self.add_module("bn{}".format(i + 1), nn.BatchNorm2d(n_feature_maps, affine=False))
             self.add_module("conv{}".format(i + 1), conv)
-        self.output = nn.Linear(n_maps, n_labels)
+        self.output = nn.Linear(n_feature_maps, n_labels)
 
     def forward(self, x):
         x = x.unsqueeze(1)
