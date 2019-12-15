@@ -1,5 +1,8 @@
 import argparse
 import torch
+import numpy as np
+import random
+
 from tqdm import tqdm
 
 from pprint import pprint
@@ -37,6 +40,13 @@ def extract_feature(model, device, data_loader, file_handler):
 
 def main(config):
 
+    # set random seed
+
+    torch.manual_seed(config.seed)
+    np.random.seed(config.seed)
+    random.seed(config.seed)
+
+
     # Preapre model
 
     model_config = load_json(config.model_config)
@@ -70,6 +80,7 @@ def main(config):
     if len(gpu_device_ids) > 1:
         cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
         model = torch.nn.DataParallel(model, device_ids=gpu_device_ids)
+        torch.cuda.manual_seed(config.seed)
 
     model.eval()
     model.to(device)
@@ -108,7 +119,6 @@ def main(config):
     cp.print_green('test meta file:\n', meta)
 
     test_file_handler.generate_meta_file(meta)
-
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neural Feature Extractor')
@@ -126,7 +136,10 @@ if __name__ == '__main__':
                       help='type of output file')
 
     parser.add_argument('--num_gpu', default=0, type=int,
-                      help='number of GPU to use (default:0)')
+                      help='number of GPU to use (default: 0)')
+
+    parser.add_argument('--seed', default=10, type=int,
+                      help='random seed (default: 10')
 
     config = parser.parse_args()
 

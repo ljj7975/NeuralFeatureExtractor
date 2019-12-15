@@ -5,6 +5,8 @@ import csv
 import warnings
 from pprint import pprint
 
+# Must be modified to support per class saving
+
 class FileHandler(ABC):
     def __init__(self, dir_path):
         super(FileHandler, self).__init__()

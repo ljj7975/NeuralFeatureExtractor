@@ -2,10 +2,16 @@
     "data_loader": "GscDataLoader",
     "train_config": {
         "data_dir": "abc",
-        "batch_size": 512
+        "batch_size": 512,
+        "sample_rate": 16000,
+        "audio_preprocessing": "MFCCs",
+        "dataset_ratio": 0.9
     },
     "test_config": {
         "data_dir": "abc",
-        "batch_size": 512
+        "batch_size": 512,
+        "sample_rate": 16000,
+        "audio_preprocessing": "MFCCs",
+        "dataset_ratio": 0.1
     }
 }

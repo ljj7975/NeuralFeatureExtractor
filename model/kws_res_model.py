@@ -15,9 +15,8 @@ class KWSResModel(nn.Module):
         for i, conv in enumerate(self.convs):
             self.add_module("bn{}".format(i + 1), nn.BatchNorm2d(config["n_feature_maps"], affine=False))
             self.add_module("conv{}".format(i + 1), conv)
-        # self.inter_output = nn.Linear(config["n_feature_maps"], 196)
-        # self.output = nn.Linear(196, config["n_labels"])
-        self.output = nn.Linear(config["n_feature_maps"], config["n_labels"])
+        self.inter_output = nn.Linear(config["n_feature_maps"], 196)
+        self.output = nn.Linear(196, config["n_labels"])
 
     def forward(self, x):
         x = x.unsqueeze(1)
