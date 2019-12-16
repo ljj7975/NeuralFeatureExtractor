@@ -78,8 +78,10 @@ def main(config):
     device, gpu_device_ids = prepare_device(config.num_gpu)
 
     if len(gpu_device_ids) > 1:
-        cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
         model = torch.nn.DataParallel(model, device_ids=gpu_device_ids)
+
+    if "cuda" in str(device):
+        cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
         torch.cuda.manual_seed(config.seed)
 
     model.eval()
