@@ -1,5 +1,6 @@
 {
     "model": "MNISTModel",
     "config": {},
+    "activation": "tanh",
     "trained_model": "pretrained_model/mnist_model.pt"
 }

@@ -19,12 +19,14 @@ class GSCDataset(Dataset):
         self.labels = []
 
         for class_name in os.listdir(config["data_dir"]):
-            dir_path = config["data_dir"] + "" + class_name
+            dir_path = os.path.join(config["data_dir"], class_name)
+            
             if not os.path.isdir(dir_path) or class_name not in target_classes:
                 continue
 
             count = 0
             for file_name in os.listdir(dir_path):
+
                 if "wav" not in file_name:
                     continue
 
@@ -32,7 +34,7 @@ class GSCDataset(Dataset):
                     continue
 
                 count += 1
-                file_path = dir_path + "/" + file_name
+                file_path = os.path.join(dir_path, file_name)
                 self.audio_files.append(file_path)
 
             self.labels += [target_classes.index(class_name)] * count

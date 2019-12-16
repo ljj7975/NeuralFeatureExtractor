@@ -3,11 +3,11 @@
     "train_config": {
         "train": true,
         "data_dir": "abc",
-        "batch_size": 512,
+        "batch_size": 512
     },
     "test_config": {
         "train": false,
         "data_dir": "abc",
-        "batch_size": 512,
+        "batch_size": 512
     }
 }

@@ -14,29 +14,52 @@ import model as model_modules
 import data_loader as data_loader_modules
 import file_handler as file_handler_modules
 
-def extract_feature(model, device, data_loader, file_handler):
+def extract_feature(model, activation, data_loader, file_handler, device):
     # Extract features
     feature_size = None
     total = 0
+    min_value = float("inf")
+    max_value = float("-inf")
+    labels = set([])
     for (data, target) in tqdm(data_loader):
         data, target = data.to(device), target.to(device)
 
         extracted_features = model(data)
+        if activation is not None:
+            extracted_features = activation(extracted_features)
 
         if feature_size is None:
             feature_size = list(extracted_features.size())[1:]
 
+        batch_min_value = extracted_features.min().item()
+        if batch_min_value < min_value:
+            min_value = batch_min_value
+
+        batch_max_value = extracted_features.max().item()
+        if batch_max_value > max_value:
+            max_value = batch_max_value
+
         extracted_features = extracted_features.data.tolist()
 
-        target = target.unsqueeze(1).data.tolist()
+        target = target.data.tolist()
+        labels = labels.union(set(target))
 
+        target = np.expand_dims(target, axis=1)
         file_handler.add_sample(extracted_features, target)
 
         total += len(target)
 
         file_handler.flush()
 
-    return feature_size, total
+    meta = {
+        'feature_size': feature_size,
+        'total': total,
+        'min': min_value,
+        'max': max_value,
+        'labels': labels
+    }
+
+    return meta
 
 def main(config):
 
@@ -55,9 +78,14 @@ def main(config):
 
     trained_model = model_config["trained_model"]
     cp.print_green(f"pretrained model: {trained_model}")
-    model.load_state_dict(torch.load(trained_model), strict=False)
 
+    model.load_state_dict(torch.load(trained_model), strict=False)
     cp.print_green("model:\n", model)
+
+    activation = None
+    if "activation" in model_config:
+        activation = getattr(torch, model_config["activation"], None)
+    cp.print_green("activation: ", type(activation).__name__)
 
 
     # Prepare DataLoader
@@ -72,7 +100,8 @@ def main(config):
 
     cp.print_green(f"file type: {config.file_type}")
     cp.print_green(f"output folder: {output_path}")
-    
+
+
     # Prepare extraction
 
     device, gpu_device_ids = prepare_device(config.num_gpu)
@@ -87,17 +116,13 @@ def main(config):
     model.eval()
     model.to(device)
 
+
     # Extract train features
 
     train_data_loader = data_loader_class(data_config["train_config"])
     train_file_handler = file_handler_modules.handler_mapping[config.file_type](output_path + "/train")
 
-    feature_size, total = extract_feature(model, device, train_data_loader, train_file_handler)
-
-    meta = {
-        'feature_size': feature_size,
-        'total': total
-    }
+    meta = extract_feature(model, activation, train_data_loader, train_file_handler, device)
 
     cp.print_green('train meta file:\n', meta)
 
@@ -111,12 +136,7 @@ def main(config):
     test_data_loader = data_loader_class(data_config["test_config"])
     test_file_handler = file_handler_modules.handler_mapping[config.file_type](output_path + "/test")
 
-    feature_size, total = extract_feature(model, device, test_data_loader, test_file_handler)
-
-    meta = {
-        'feature_size': feature_size,
-        'total': total
-    }
+    meta = extract_feature(model, activation, test_data_loader, test_file_handler, device)
 
     cp.print_green('test meta file:\n', meta)
 
