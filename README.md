@@ -9,7 +9,7 @@ current version supports following models:
 - [pytorch MNIST example](https://github.com/pytorch/examples/tree/master/mnist)
 - [Keyword Spotting: Honk](https://github.com/castorini/honk) & [Google Speech Command dataset](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html)
 
-Details can be found below
+Details can be found [below](https://github.com/ljj7975/NeuralFeatureExtractor#supported-feature-extraction)
 
 
 ## Supported file types
