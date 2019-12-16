@@ -44,7 +44,7 @@ def extract_feature(model, activation, data_loader, file_handler, device):
         target = target.data.tolist()
         labels = labels.union(set(target))
 
-        target = np.expand_dims(target, axis=1)
+        target = list(np.expand_dims(target, axis=1))
         file_handler.add_sample(extracted_features, target)
 
         total += len(target)
