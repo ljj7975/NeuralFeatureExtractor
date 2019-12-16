@@ -1,14 +1,14 @@
 {
     "data_loader": "GSCDataLoader",
     "train_config": {
-        "data_dir": "abc",
+        "data_dir": "data",
         "batch_size": 512,
         "sample_rate": 16000,
         "audio_preprocessing": "MFCCs",
         "dataset_ratio": 0.9
     },
     "test_config": {
-        "data_dir": "abc",
+        "data_dir": "data",
         "batch_size": 512,
         "sample_rate": 16000,
         "audio_preprocessing": "MFCCs",
