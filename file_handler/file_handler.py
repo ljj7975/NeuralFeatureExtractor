@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from utils import ensure_dir
+from utils import ensure_dir, save_json
 import copy
 import csv
 import warnings
+import os
 from pprint import pprint
 
 # Must be modified to support per class saving
@@ -42,15 +43,14 @@ class FileHandler(ABC):
 
     def generate_meta_file(self, meta):
         '''
-        recommanded to store
-            - feature_size: feature tensor size
-            - total: total number of samples
+        default meta being stored
+            'feature_size': feature_size,
+            'total': total sample count,
+            'min': min_value,
+            'max': max_value,
+            'labels': target labels
         '''
-
-        meta_writer = csv.writer(open(self.dir_path + "/meta.csv", "w"))
-        for key, val in meta.items():
-            meta_writer.writerow([key, val])
-
+        save_json(meta, os.path.join(self.dir_path, "meta.json"))
         self.meta = meta
 
     @abstractmethod

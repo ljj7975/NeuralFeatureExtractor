@@ -56,7 +56,7 @@ def extract_feature(model, activation, data_loader, file_handler, device):
         'total': total,
         'min': min_value,
         'max': max_value,
-        'labels': labels
+        'labels': list(labels)
     }
 
     return meta
