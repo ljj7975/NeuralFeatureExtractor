@@ -1,0 +1,6 @@
+{
+    "model": "FERGModel",
+    "config": {},
+    "activation": "tanh",
+    "trained_model": "pretrained_model/ferg_model.pt"
+}

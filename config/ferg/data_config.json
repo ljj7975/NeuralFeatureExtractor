@@ -1,0 +1,17 @@
+{
+    "data_loader": "FERGDataLoader",
+    "train_config": {
+        "train": true,
+        "data_dir": "data",
+        "batch_size": 512,
+        "dataset_ratio": 0.9,
+        "train": true
+    },
+    "test_config": {
+        "train": false,
+        "data_dir": "data",
+        "batch_size": 512,
+        "dataset_ratio": 0.1,
+        "train": false
+    }
+}

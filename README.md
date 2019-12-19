@@ -6,8 +6,9 @@ NeuralFeatureExtractor (NFE) enables feature extraction from trained PyTorch mod
 ## Supported models & datasets
 
 current version supports following models:
-- [pytorch MNIST example](https://github.com/pytorch/examples/tree/master/mnist)
+- [pytorch MNIST CNN example](https://github.com/pytorch/examples/tree/master/mnist)
 - [Keyword Spotting: Honk](https://github.com/castorini/honk) & [Google Speech Command dataset](https://ai.googleblog.com/2017/08/launching-speech-commands-dataset.html)
+- [CNN example for MNIST](https://github.com/pytorch/examples/tree/master/mnist) & [Facial Expression Research Group Database (FERG-DB)](https://grail.cs.washington.edu/projects/deepexpr/ferg-db.html)
 
 Details can be found [below](https://github.com/ljj7975/NeuralFeatureExtractor#supported-feature-extraction)
 
@@ -73,3 +74,22 @@ feature size : 196
 python main.py --model_config config/kws/model_config.json --data_config config/kws/data_config.json
 ```
 
+### [CNN example for MNIST](https://github.com/pytorch/examples/tree/master/mnist) & [Facial Expression Research Group Database (FERG-DB)](https://grail.cs.washington.edu/projects/deepexpr/ferg-db.html)
+
+Use the same CNN example for MNIST by loading FERG images with grey scale and reduce dimensions to [1, 28, 28]
+
+target classes:
+
+- anger: 0
+- disgust: 1
+- fear: 2
+- joy: 3
+- neutral: 4
+- sadness: 5
+- surprise: 6
+
+feature size : 196
+
+```
+python main.py --model_config config/ferg/model_config.json --data_config config/ferg/data_config.json
+```
