@@ -84,9 +84,7 @@ target classes:
 - disgust: 1
 - fear: 2
 - joy: 3
-- neutral: 4
-- sadness: 5
-- surprise: 6
+- sadness: 4
 
 feature size : 196
 

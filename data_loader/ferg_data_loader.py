@@ -5,6 +5,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 import os
 import shutil
 import numpy as np
+from tqdm import tqdm
 
 class FERGDataLoader(DataLoader):
     def __init__(self, config):
@@ -15,7 +16,7 @@ class FERGDataLoader(DataLoader):
             os.mkdir(processed_dir)
 
             characters = ["aia", "bonnie", "jules", "malcolm", "mery", "ray"]
-            for character in characters:
+            for character in tqdm(characters):
                 char_folder = os.path.join(config["data_dir"], character)
 
                 for emotion_folder in os.listdir(char_folder):
@@ -23,6 +24,9 @@ class FERGDataLoader(DataLoader):
                     if not os.path.isdir(source_folder):
                         continue
                     emotion = emotion_folder.split('_')[1]
+
+                    if emotion in ["neutral", "surprise"]:
+                        continue
 
                     target_folder = os.path.join(processed_dir, emotion)
                     if not os.path.exists(target_folder):
@@ -35,7 +39,7 @@ class FERGDataLoader(DataLoader):
                         shutil.copy(source_file, target_file)
 
         trsfm = transforms.Compose([
-            transforms.Resize([28,28]),
+            transforms.Resize([28, 28]),
             transforms.Grayscale(num_output_channels=1),
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))

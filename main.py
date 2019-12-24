@@ -70,6 +70,15 @@ def main(config):
     random.seed(config.seed)
 
 
+    # prepare hardware accelearation
+
+    device, gpu_device_ids = prepare_device(config.num_gpu)
+
+    if "cuda" in str(device):
+        cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
+        torch.cuda.manual_seed(config.seed)
+
+
     # Preapre model
 
     model_config = load_json(config.model_config)
@@ -79,7 +88,7 @@ def main(config):
     trained_model = model_config["trained_model"]
     cp.print_green(f"pretrained model: {trained_model}")
 
-    model.load_state_dict(torch.load(trained_model), strict=False)
+    model.load_state_dict(torch.load(trained_model, map_location=device), strict=False)
     cp.print_green("model:\n", model)
 
     activation = None
@@ -104,14 +113,8 @@ def main(config):
 
     # Prepare extraction
 
-    device, gpu_device_ids = prepare_device(config.num_gpu)
-
     if len(gpu_device_ids) > 1:
         model = torch.nn.DataParallel(model, device_ids=gpu_device_ids)
-
-    if "cuda" in str(device):
-        cp.print_green(f"utilizing gpu devices : {gpu_device_ids}")
-        torch.cuda.manual_seed(config.seed)
 
     model.eval()
     model.to(device)
@@ -141,7 +144,7 @@ def main(config):
     cp.print_green('test meta file:\n', meta)
 
     test_file_handler.generate_meta_file(meta)
-        
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neural Feature Extractor')
 
